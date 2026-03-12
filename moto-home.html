@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Moto Express - Votre Service Moto</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Bebas+Neue&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #FF9500;
+            --secondary: #FF6B00;
+            --dark: #1A1A1A;
+            --darker: #0D0D0D;
+            --yellow: #FFD700;
+            --red: #FF3B30;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Rajdhani', sans-serif;
+            background: var(--darker);
+            color: white;
+            overflow-x: hidden;
+        }
+
+        /* Animated Background */
+        .animated-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: 
+                linear-gradient(135deg, #0D0D0D 0%, #1A1A1A 50%, #0D0D0D 100%);
+        }
+
+        .animated-bg::before {
+            content: '';
+            position: absolute;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, var(--primary) 0%, transparent 70%);
+            top: -200px;
+            right: -200px;
+            opacity: 0.15;
+            animation: float 20s ease-in-out infinite;
+        }
+
+        .animated-bg::after {
+            content: '';
+            position: absolute;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, var(--secondary) 0%, transparent 70%);
+            bottom: -150px;
+            left: -150px;
+            opacity: 0.1;
+            animation: float 15s ease-in-out infinite reverse;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            50% { transform: translate(50px, 50px) rotate(180deg); }
+        }
+
+        /* Header */
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(13, 13, 13, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 2px solid var(--primary);
+            z-index: 100;
+            animation: slideDown 0.8s ease-out;
+        }
+
+        @keyframes slideDown {
+            from {
+                transform: translateY(-100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .header-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 42px;
+            letter-spacing: 3px;
+            background: linear-gradient(135deg, var(--primary), var(--yellow));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 30px rgba(255, 149, 0, 0.3);
+        }
+
+        .speed-indicator {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 18px;
+            color: var(--yellow);
+            font-weight: 700;
+        }
+
+        .speed-bars {
+            display: flex;
+            gap: 3px;
+        }
+
+        .speed-bar {
+            width: 4px;
+            height: 20px;
+            background: var(--primary);
+            animation: pulse 1s ease-in-out infinite;
+        }
+
+        .speed-bar:nth-child(2) { animation-delay: 0.1s; }
+        .speed-bar:nth-child(3) { animation-delay: 0.2s; }
+        .speed-bar:nth-child(4) { animation-delay: 0.3s; }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.3; transform: scaleY(0.5); }
+            50% { opacity: 1; transform: scaleY(1); }
+        }
+
+        /* Main Container */
+        .main-container {
+            min-height: 100vh;
+            padding-top: 100px;
+            padding-bottom: 50px;
+        }
+
+        .hero {
+            text-align: center;
+            padding: 60px 20px;
+            max-width: 900px;
+            margin: 0 auto;
+            animation: fadeInUp 1s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hero h1 {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: clamp(48px, 10vw, 120px);
+            line-height: 0.9;
+            margin-bottom: 20px;
+            letter-spacing: 5px;
+            background: linear-gradient(135deg, white 0%, var(--yellow) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero p {
+            font-size: 24px;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 50px;
+            font-weight: 500;
+        }
+
+        /* Options Grid */
+        .options-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 30px;
+        }
+
+        .option-card {
+            background: linear-gradient(135deg, rgba(255, 149, 0, 0.1) 0%, rgba(255, 107, 0, 0.05) 100%);
+            border: 2px solid var(--primary);
+            border-radius: 20px;
+            padding: 40px;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+            animation: fadeIn 0.6s ease-out both;
+        }
+
+        .option-card:nth-child(1) { animation-delay: 0.1s; }
+        .option-card:nth-child(2) { animation-delay: 0.2s; }
+        .option-card:nth-child(3) { animation-delay: 0.3s; }
+        .option-card:nth-child(4) { animation-delay: 0.4s; }
+        .option-card:nth-child(5) { animation-delay: 0.5s; }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .option-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            opacity: 0;
+            transition: opacity 0.4s;
+        }
+
+        .option-card:hover::before {
+            opacity: 0.1;
+        }
+
+        .option-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            border-color: var(--yellow);
+            box-shadow: 
+                0 20px 60px rgba(255, 149, 0, 0.4),
+                0 0 80px rgba(255, 215, 0, 0.2);
+        }
+
+        .option-card::after {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, var(--primary), var(--yellow), var(--primary));
+            border-radius: 20px;
+            opacity: 0;
+            z-index: -1;
+            transition: opacity 0.4s;
+            filter: blur(20px);
+        }
+
+        .option-card:hover::after {
+            opacity: 0.5;
+        }
+
+        .card-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .card-icon {
+            font-size: 80px;
+            margin-bottom: 20px;
+            display: block;
+            animation: bounce 2s ease-in-out infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .option-card:hover .card-icon {
+            animation: spin 0.6s ease-in-out;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg) scale(1); }
+            to { transform: rotate(360deg) scale(1.1); }
+        }
+
+        .card-title {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 32px;
+            margin-bottom: 15px;
+            letter-spacing: 2px;
+            color: white;
+        }
+
+        .card-description {
+            font-size: 16px;
+            color: rgba(255, 255, 255, 0.7);
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .card-arrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--yellow);
+            transition: all 0.3s;
+        }
+
+        .option-card:hover .card-arrow {
+            gap: 20px;
+        }
+
+        /* Admin Card Special */
+        .admin-card {
+            background: linear-gradient(135deg, rgba(255, 59, 48, 0.1) 0%, rgba(255, 59, 48, 0.05) 100%);
+            border-color: var(--red);
+        }
+
+        .admin-card:hover {
+            border-color: var(--red);
+            box-shadow: 
+                0 20px 60px rgba(255, 59, 48, 0.4),
+                0 0 80px rgba(255, 59, 48, 0.2);
+        }
+
+        .admin-card::after {
+            background: linear-gradient(45deg, var(--red), #ff6b6b, var(--red));
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 40px 20px;
+            margin-top: 80px;
+            border-top: 1px solid rgba(255, 149, 0, 0.2);
+        }
+
+        footer p {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 14px;
+        }
+
+        /* Mobile Toggle */
+        .mobile-toggle {
+            display: none;
+            background: var(--primary);
+            border: none;
+            padding: 10px 15px;
+            border-radius: 8px;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-container {
+                padding: 15px 20px;
+            }
+
+            .logo {
+                font-size: 32px;
+            }
+
+            .speed-indicator {
+                font-size: 14px;
+            }
+
+            .hero h1 {
+                font-size: 56px;
+            }
+
+            .hero p {
+                font-size: 18px;
+            }
+
+            .options-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .option-card {
+                padding: 30px;
+            }
+
+            .card-icon {
+                font-size: 60px;
+            }
+
+            .card-title {
+                font-size: 28px;
+            }
+        }
+
+        /* Decorative Elements */
+        .decorative-line {
+            position: fixed;
+            width: 2px;
+            height: 100vh;
+            background: linear-gradient(to bottom, transparent, var(--primary), transparent);
+            opacity: 0.3;
+            animation: moveUpDown 3s ease-in-out infinite;
+        }
+
+        .decorative-line:nth-child(1) {
+            left: 10%;
+        }
+
+        .decorative-line:nth-child(2) {
+            right: 10%;
+            animation-delay: 1s;
+        }
+
+        @keyframes moveUpDown {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(30px); }
+        }
+    </style>
+</head>
+<body>
+    <div class="animated-bg"></div>
+    <div class="decorative-line"></div>
+    <div class="decorative-line"></div>
+
+    <!-- Header -->
+    <header>
+        <div class="header-container">
+            <div class="logo">MOTO EXPRESS</div>
+            <div class="speed-indicator">
+                <div class="speed-bars">
+                    <div class="speed-bar"></div>
+                    <div class="speed-bar"></div>
+                    <div class="speed-bar"></div>
+                    <div class="speed-bar"></div>
+                </div>
+                <span>EN LIGNE</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <div class="main-container">
+        <!-- Hero Section -->
+        <div class="hero">
+            <h1>VOTRE SERVICE<br>MOTO</h1>
+            <p>Rapide • Fiable • Disponible 24/7</p>
+        </div>
+
+        <!-- Options Grid -->
+        <div class="options-grid">
+            <!-- Activité Moto -->
+            <div class="option-card" onclick="navigateTo('activites.html')">
+                <div class="card-content">
+                    <span class="card-icon">🏍️</span>
+                    <h2 class="card-title">Activité Moto</h2>
+                    <p class="card-description">
+                        Consultez toutes les activités en cours, trajets disponibles 
+                        et demandes de course en temps réel.
+                    </p>
+                    <div class="card-arrow">
+                        Voir les activités →
+                    </div>
+                </div>
+            </div>
+
+            <!-- Carte de la Ville -->
+            <div class="option-card" onclick="navigateTo('carte.html')">
+                <div class="card-content">
+                    <span class="card-icon">🗺️</span>
+                    <h2 class="card-title">Carte de la Ville</h2>
+                    <p class="card-description">
+                        Explorez la carte interactive de la ville, localisez les 
+                        motos disponibles et planifiez votre trajet.
+                    </p>
+                    <div class="card-arrow">
+                        Ouvrir la carte →
+                    </div>
+                </div>
+            </div>
+
+            <!-- Contacter un Motoman -->
+            <div class="option-card" onclick="navigateTo('contact-moto.html')">
+                <div class="card-content">
+                    <span class="card-icon">📞</span>
+                    <h2 class="card-title">Contacter un Motoman</h2>
+                    <p class="card-description">
+                        Appelez directement un chauffeur disponible ou envoyez 
+                        une demande de course instantanée.
+                    </p>
+                    <div class="card-arrow">
+                        Contacter maintenant →
+                    </div>
+                </div>
+            </div>
+
+            <!-- Vendre une Moto -->
+            <div class="option-card" onclick="navigateTo('vendre-moto.html')">
+                <div class="card-content">
+                    <span class="card-icon">💰</span>
+                    <h2 class="card-title">Vendre une Moto</h2>
+                    <p class="card-description">
+                        Publiez une annonce pour vendre votre moto. Accédez au 
+                        marché et trouvez les meilleures offres.
+                    </p>
+                    <div class="card-arrow">
+                        Publier une annonce →
+                    </div>
+                </div>
+            </div>
+
+            <!-- Connexion Admin -->
+            <div class="option-card admin-card" onclick="navigateTo('admin-login.html')">
+                <div class="card-content">
+                    <span class="card-icon">⚙️</span>
+                    <h2 class="card-title">Connexion Admin</h2>
+                    <p class="card-description">
+                        Accès réservé aux administrateurs. Gérez les chauffeurs, 
+                        les courses et les paramètres de la plateforme.
+                    </p>
+                    <div class="card-arrow">
+                        Se connecter →
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2026 Moto Express. Tous droits réservés.</p>
+    </footer>
+
+    <script>
+        // Navigation function
+        function navigateTo(page) {
+            console.log('Navigation vers:', page);
+            // Pour l'instant, afficher une alerte
+            // Remplacer par window.location.href = page; quand les pages existent
+            
+            const pageNames = {
+                'activites.html': 'Activité Moto',
+                'carte.html': 'Carte de la Ville',
+                'contact-moto.html': 'Contacter un Motoman',
+                'vendre-moto.html': 'Vendre une Moto',
+                'admin-login.html': 'Connexion Admin'
+            };
+            
+            alert(`Redirection vers : ${pageNames[page]}\n\nPage en cours de développement...`);
+            
+            // Décommenter cette ligne quand les pages existent :
+            // window.location.href = page;
+        }
+
+        // Ajouter un effet de particules au survol
+        document.querySelectorAll('.option-card').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-10px) scale(1.02)';
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0) scale(1)';
+            });
+        });
+
+        // Animation au scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.option-card').forEach(card => {
+            observer.observe(card);
+        });
+    </script>
+</body>
+</html>
